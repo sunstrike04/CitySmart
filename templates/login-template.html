@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCity: San Francisco - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div id="flash-popup" class="popup"></div>
+    <div class="container">
+        <div class="auth-card">
+            <div class="header">
+                <h1>SmartCity: San Francisco</h1>
+                <div class="city-icon">
+                    <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 21h18M3 7v14m4-14v14m4-7v7m4-7v7m4-14v14" />
+                        <path d="M5 21V7l7-4 7 4v14" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="login">Login</button>
+                <button class="tab-btn" data-tab="signup">Sign Up</button>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form login-form active" action="{{ url_for('login') }}" method="POST">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" name="username" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="submit-button">Login</button>
+            </form>
+
+            <!-- Sign Up Form -->
+            <form class="auth-form signup-form" action="{{ url_for('signup') }}" method="POST">
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-username">Username</label>
+                    <input type="text" id="signup-username" name="username" placeholder="Choose a username" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" name="password" placeholder="Choose a password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">Confirm Password</label>
+                    <input type="password" id="signup-confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-location">Location</label>
+                    <select id="signup-location" name="location" required>
+                        <option value="" disabled selected>Select your location</option>
+                        <option value="San Jose">San Jose</option>
+                        <option value="Freemont">Freemont</option>
+                        <option value="Cupertino">Cupertino</option>
+                        <option value="Santa Clara">Santa Clara</option>
+                        <option value="Oakland">Oakland</option>
+                        <option value="SF">SF</option>
+                        <option value="Redwood City">Redwood City</option>
+                        <option value="Berkeley">Berkeley</option>
+                        <option value="Vallejo">Vallejo</option>
+                        <option value="Gillroy">Gillroy</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-button">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const forms = document.querySelectorAll('.auth-form');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and forms
+                tabBtns.forEach(b => b.classList.remove('active'));
+                forms.forEach(f => f.classList.remove('active'));
+
+                // Add active class to clicked button and corresponding form
+                btn.classList.add('active');
+                const formToShow = document.querySelector(`.${btn.dataset.tab}-form`);
+                formToShow.classList.add('active');
+            });
+        });
+    </script>
+    <div id="flashed-messages" data-messages="{{ get_flashed_messages(with_categories=true) | tojson | safe }}"></div>
+    <script>
+        const flashedMessages = {{get_flashed_messages(with_categories=true) | tojson}};
+    </script>
+    <script>
+        
+        function showFlashMessage(message, category) {
+            const popup = document.getElementById('flash-popup');
+            popup.textContent = message;
+    
+            popup.className = 'popup';
+            if (category) {
+                popup.classList.add(category);
+            }
+    
+            popup.style.display = 'block';
+    
+            setTimeout(() => {
+                popup.style.display = 'none';
+            }, 3000);
+        }
+    
+        flashedMessages.forEach(([category, message]) => {
+            showFlashMessage(message, category);
+        });
+    </script>
+    
+    
+</body>
+</html>

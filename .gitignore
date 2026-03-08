@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+sdist/
+develop-eggs/
+.installed.cfg
+*.egg-info/
+pip-wheel-metadata/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Instance / database
+/instance/database.db
+instance/
+
+# Editor / OS
+.vscode/
+.DS_Store
+
+# Secrets
+.env
