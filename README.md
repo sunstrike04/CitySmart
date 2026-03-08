@@ -38,6 +38,18 @@ Tests:
 pytest -q
 ```
 
+Secrets / environment variables
+-------------------------------
+
+This project expects sensitive values to be provided via environment variables. Create a `.env` file in the project root (this file is ignored by git) with the following entries for local development:
+
+```
+SECRET_KEY=your-flask-secret-key
+WEATHER_API_KEY=your-weatherapi-key
+```
+
+After creating `.env`, start the app as shown above — the project uses `python-dotenv` to load those values in development.
+
 Next recommended steps
 - Add a `LICENSE` file if you want to publish this repository.
 - Add any missing CI checks or code style tooling you prefer.
