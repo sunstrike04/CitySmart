@@ -1,7 +1,11 @@
 def test_app_import():
     # Load app.py directly from the repo so CI doesn't fail on import paths.
     import importlib.util
+    import os
     from pathlib import Path
+
+    # Set a dummy API key so weather_api.py doesn't raise RuntimeError during import
+    os.environ['WEATHER_API_KEY'] = 'test-key'
 
     repo_root = Path(__file__).resolve().parent.parent
     app_path = repo_root / 'app.py'
