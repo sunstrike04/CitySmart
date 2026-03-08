@@ -2,14 +2,13 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# Load environment variables from .env for development convenience
+# Load a local .env during development so I can keep keys out of git
 load_dotenv()
 
-# Expect the weather API key in the environment variable `WEATHER_API_KEY`.
+# Weather API key should be in WEATHER_API_KEY; fail fast if it's not set
 API_KEY = os.environ.get('WEATHER_API_KEY')
 if not API_KEY:
-    # Raise at import time to make missing-config obvious in development.
-    raise RuntimeError('Environment variable WEATHER_API_KEY is not set. Please add it to your .env or export it.')
+    raise RuntimeError('WEATHER_API_KEY is not set. Add it to .env or export it in your shell.')
 
 def getCurrWeather(loc):
     location = loc

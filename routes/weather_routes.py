@@ -9,14 +9,13 @@ def weather_data():
         conn = sqlite3.connect('instance/database.db')
         cursor = conn.cursor()
 
-        # Query all locations
+        # Fetch available locations for the UI filter
         cursor.execute("SELECT DISTINCT location FROM WeatherData ORDER BY location")
         locations = [row[0] for row in cursor.fetchall()]
 
-        # Get selected location from query parameter
         selected_location = request.args.get('location', 'all')
 
-        # Build query based on location filter
+        # If a specific location is requested, filter by it
         if selected_location and selected_location != 'all':
             cursor.execute("SELECT * FROM WeatherData WHERE location = ? ORDER BY timestamp", (selected_location,))
         else:

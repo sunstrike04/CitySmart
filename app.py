@@ -21,16 +21,16 @@ app.config['db'] = os.path.join(app.instance_path, 'database.db')
 app.config.from_object(Config)
 os.makedirs(app.instance_path, exist_ok=True)
 
-# Initialize extensions
+# Initialize the database (create tables if missing)
 init_db()
 
-# Register blueprints
+# Register the route blueprints
 app.register_blueprint(weather_bp)
 app.register_blueprint(settings_bp)
 app.register_blueprint(traffic_bp)
 app.register_blueprint(pollution_bp)
 
-# Root route serving login-template.html
+# Serve the login page
 @app.route('/')
 def home():
     return render_template('login-template.html')
@@ -45,12 +45,13 @@ def homepage():
     timezone = 'America/Los_Angeles'
     current_time = datetime.now(pytz.timezone(timezone)).strftime('%I:%M:%S %p')
 
+    # Average stats for the user's chosen location
     avg_stats = None
     try:
         conn = sqlite3.connect('instance/database.db')
         cursor = conn.cursor()
 
-        # Execute advanced query
+        # Query average weather and pollution stats for this location
         cursor.execute("""
             SELECT W.Location, 
                    AVG(W.Temperature) AS AvgTemperature, 
@@ -67,6 +68,7 @@ def homepage():
         curr_temp, curr_condition, curr_humidity, curr_wind = weather_api.getCurrWeather(location)
         
         if result:
+            # Build a small dict the template can use
             avg_stats = {
                 'Location': result[0],
                 'AvgTemperature': result[1],

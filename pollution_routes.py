@@ -3,19 +3,22 @@ from flask import Blueprint, render_template, request
 
 pollution_bp = Blueprint('pollution', __name__)
 
+
 def get_db_connection():
+  """Open a connection to the instance DB and return it.
+
+  Using sqlite3.Row makes template code simpler.
   """
-  Establish a connection to the SQLite database.
-  Returns a connection object.
-  """
-  connection = sqlite3.connect('instance/database.db') 
-  connection.row_factory = sqlite3.Row 
+  connection = sqlite3.connect('instance/database.db')
+  connection.row_factory = sqlite3.Row
   return connection
+
 
 @pollution_bp.route('/pollution-data')
 def pollution_data():
   conn = get_db_connection()
 
+  # List of locations for the filter dropdown
   locations_query = 'SELECT DISTINCT location FROM PollutionData ORDER BY location'
   locations = [row['location'] for row in conn.execute(locations_query).fetchall()]
 

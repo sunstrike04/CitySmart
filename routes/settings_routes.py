@@ -4,7 +4,10 @@ import sqlite3
 settings_bp = Blueprint('settings', __name__)
 
 def get_notification_preferences(user_id):
-    """Fetch notification preferences for a user."""
+    """Return a dict of the user's notification toggles.
+
+    Converts stored integers into booleans for templates.
+    """
     with sqlite3.connect('instance/database.db') as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -14,7 +17,6 @@ def get_notification_preferences(user_id):
         """, (user_id,))
         result = cursor.fetchone()
         if result:
-                # Explicitly convert to integers
                 return {
                     'weather_enabled': bool(result[0]),
                     'pollution_enabled': bool(result[1]),
@@ -27,13 +29,13 @@ def get_notification_preferences(user_id):
         }
 
 def update_notification_preferences(user_id, weather, pollution, traffic):
-    """Update notification preferences for a user."""
+    """Save the boolean toggles (stored as ints) for a user."""
     with sqlite3.connect('instance/database.db') as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            UPDATE notification_preferences
-            SET weather_enabled = ?, pollution_enabled = ?, traffic_enabled = ?
-            WHERE user_id = ?;
+        UPDATE notification_preferences
+        SET weather_enabled = ?, pollution_enabled = ?, traffic_enabled = ?
+        WHERE user_id = ?;
         """, (int(weather), int(pollution), int(traffic), user_id))
         conn.commit()
 

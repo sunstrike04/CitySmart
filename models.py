@@ -1,18 +1,18 @@
 import sqlite3
-import bcrypt  # Use bcrypt directly for password hashing
+import bcrypt  # used for password hashing
 import os
 from flask import current_app
 
-# Initialize SQLite database
+# Path to the SQLite DB file used by this app
 db = 'instance/database.db'
 
-# Utility functions to initialize and interact with the database
+
 def init_db():
-    """Initialize the database and create tables."""
+    """Create the database tables if they don't exist yet."""
     with sqlite3.connect(db) as conn:
         cursor = conn.cursor()
 
-        # Create user table
+        # user table holds accounts
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,7 +23,7 @@ def init_db():
         );
         """)
 
-        # Create notification_preferences table
+        # notification_preferences stores per-user toggles
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS notification_preferences (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,7 +38,7 @@ def init_db():
         conn.commit()
 
 def add_user(username, email, password, location):
-    """Add a new user to the user table."""
+    """Insert a new user row with a bcrypt-hashed password."""
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     with sqlite3.connect(db) as conn:
@@ -50,7 +50,7 @@ def add_user(username, email, password, location):
         conn.commit()
 
 def get_user_by_username(username):
-    """Retrieve a user by username."""
+    """Return the user row for `username`, or None if not found."""
     with sqlite3.connect(db) as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -60,7 +60,7 @@ def get_user_by_username(username):
         return cursor.fetchone()
 
 def check_password(username, password):
-    """Check if the given password matches the stored hash for a user."""
+    """Verify a plaintext password against the stored bcrypt hash."""
     user = get_user_by_username(username)
     if not user:
         return False
@@ -68,17 +68,20 @@ def check_password(username, password):
     return bcrypt.checkpw(password.encode('utf-8'), stored_password.encode('utf-8'))
 
 def add_notification_preferences(user_id, weather, pollution, traffic):
-    """Add notification preferences for a user."""
+    """Create a notification_preferences row for a user.
+
+    Expects booleans or ints for weather/pollution/traffic.
+    """
     with sqlite3.connect(db) as conn:
         cursor = conn.cursor()
         cursor.execute("""
         INSERT INTO notification_preferences (user_id, weather_enabled, pollution_enabled, traffic_enabled)
-        VALUES (?, ?, ?, ?);
+        VALUES (?, ?, ?, ?)
         """, (user_id, int(weather), int(pollution), int(traffic)))
         conn.commit()
 
 def get_notification_preferences(user_id):
-    """Retrieve notification preferences for a user."""
+    """Return the preference tuple (weather, pollution, traffic) for a user."""
     with sqlite3.connect(db) as conn:
         cursor = conn.cursor()
         cursor.execute("""
