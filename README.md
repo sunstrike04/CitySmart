@@ -1,56 +1,124 @@
+
 # CitySmart
-CS411 Fall 2024 CitySmart project
 
-Quickstart
----------
+CitySmart is a Flask-based web application that brings together weather, air pollution, and traffic data to help users explore environmental and transportation conditions across different locations.
 
-Prerequisites:
+The application combines external weather data with information stored in a relational database, providing a centralized dashboard for viewing city statistics.
 
-- Python 3.8+ (3.11 recommended)
+## Features
+
+- **User accounts:** Sign up, log in, and maintain a personalized location preference.
+- **City dashboard:** View weather and environmental statistics for a selected location.
+- **Weather integration:** Retrieve current weather conditions through an external API.
+- **Environmental data:** Query stored weather and pollution measurements, including temperature, humidity, particulate matter, and ozone levels.
+- **Traffic information:** Access traffic-related data through dedicated application routes.
+- **Database integration:** Use SQL queries to retrieve and aggregate city data.
+
+## Tech Stack
+
+- **Backend:** Python, Flask
+- **Frontend:** HTML, CSS, Jinja2 templates
+- **Database:** SQLite, SQL
+- **APIs:** External weather API
+- **Other tools:** Git, pytest, GitHub Actions
+
+## Project Structure
+
+```text
+CitySmart/
+├── app.py                 # Main Flask application
+├── config.py              # Application configuration
+├── models.py              # Database and user operations
+├── routes/                # Weather, traffic, pollution, and settings routes
+├── templates/             # HTML templates
+├── static/css/            # Stylesheets
+├── data/                  # Project data
+├── tests/                 # Tests
+├── weather_api.py         # Weather API integration
+├── trafficdatascript.py   # Traffic data initialization
+└── requirements.txt       # Python dependencies
+```
+
+## How It Works
+
+CitySmart uses Flask to handle application requests and render HTML templates.
+
+After signing in, users can access a dashboard associated with their selected location. The backend retrieves weather information from an external API and queries locally stored environmental data.
+
+SQL queries aggregate weather and pollution measurements to calculate statistics such as average temperature, humidity, particulate matter, and ozone levels.
+
+The application organizes weather, traffic, pollution, and settings functionality into separate Flask blueprints.
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.8+ (Python 3.11 recommended)
 - pip
+- A weather API key
 
-Setup (local development):
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/sunstrike04/CitySmart.git
+cd CitySmart
+```
+
+2. Create and activate a virtual environment:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
+```
+
+3. Install dependencies:
+
+```bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-Create the instance DB (the app will also initialize user tables on first run):
+4. Create a `.env` file in the project root:
 
-```bash
-python trafficdatascript.py   # populates TrafficData
-python -c "import app"     # will initialize the DB via `init_db()`
+```env
+SECRET_KEY=your-flask-secret-key
+WEATHER_API_KEY=your-weatherapi-key
 ```
 
-Run the app:
+5. Initialize the local database:
+
+```bash
+python trafficdatascript.py
+python -c "import app"
+```
+
+6. Start the application:
 
 ```bash
 export FLASK_APP=app.py
 flask run
 ```
 
-Tests:
+Open the local address displayed by Flask in your browser.
+
+## Testing
+
+Run the available tests with:
 
 ```bash
 pytest -q
 ```
 
-Secrets / environment variables
--------------------------------
+## Engineering Highlights
 
-This project expects sensitive values to be provided via environment variables. Create a `.env` file in the project root (this file is ignored by git) with the following entries for local development:
+- Organized backend functionality into separate Flask route modules.
+- Integrated external API data with locally stored relational data.
+- Used SQL joins and aggregate functions to generate location-specific statistics.
+- Implemented user authentication and session-based application behavior.
+- Added automated tests and a GitHub Actions workflow.
 
-```
-SECRET_KEY=your-flask-secret-key
-WEATHER_API_KEY=your-weatherapi-key
-```
+## Background
 
-After creating `.env`, start the app as shown above — the project uses `python-dotenv` to load those values in development.
-
-Next recommended steps
-- Add a `LICENSE` file if you want to publish this repository.
-- Add any missing CI checks or code style tooling you prefer.
-
+Originally developed as part of CS 411 (Database Systems) at the University of Illinois Urbana-Champaign, Fall 2024.
