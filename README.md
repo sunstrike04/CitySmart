@@ -49,7 +49,7 @@ SQL queries aggregate weather and pollution measurements to calculate statistics
 
 The application organizes weather, traffic, pollution, and settings functionality into separate Flask blueprints.
 
-## Engineering Highlights
+## Technical Highlights
 
 - Organized backend functionality into separate Flask route modules.
 - Integrated external API data with locally stored relational data.
